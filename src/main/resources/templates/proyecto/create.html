@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Crear proyecto')}">
+	
+	<link rel="icon" type="image/png" href="/imagenes/icons.png">
+</head>
+<body>
+<div class="app-shell">
+    <aside th:replace="~{fragments/layout :: sidebar('proyectos')}"></aside>
+
+    <main class="app-main">
+        <div th:replace="~{fragments/layout :: mensajes}"></div>
+        <div class="card-sf form-card">
+            <h4 class="fw-bold mb-3">Crear nuevo proyecto</h4>
+            <form method="post" th:action="@{/proyectos}">
+                <div class="mb-3"><input type="text" name="nombre" class="form-control"
+                                         placeholder="Nombre del proyecto" maxlength="150" required></div>
+                <div class="mb-3"><textarea name="descripcion" rows="3" class="form-control"
+                                            placeholder="Descripcion del proyecto"></textarea></div>
+                <div class="row g-3 mb-4">
+                    <div class="col"><label class="form-label small text-muted">Fecha inicio</label>
+                        <input type="date" name="fechaInicio" class="form-control" required></div>
+                    <div class="col"><label class="form-label small text-muted">Fecha fin</label>
+                        <input type="date" name="fechaFin" class="form-control" required></div>
+                </div>
+                <button type="submit" class="btn btn-sf w-100 py-2">Crear Proyecto</button>
+                <a th:href="@{/proyectos}" class="btn btn-link w-100 mt-2">Cancelar</a>
+            </form>
+        </div>
+    </main>
+</div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

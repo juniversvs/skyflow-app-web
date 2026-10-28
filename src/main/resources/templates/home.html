@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Menu principal')}">
+	
+	<link rel="icon" type="image/png" href="/imagenes/icons.png">
+</head>
+<body>
+<div class="app-shell">
+    <aside th:replace="~{fragments/layout :: sidebar('inicio')}"></aside>
+
+    <main class="app-main">
+        <div th:replace="~{fragments/layout :: topbar('Buscar proyectos, tareas...')}"></div>
+        <div th:replace="~{fragments/layout :: mensajes}"></div>
+
+        <h3 class="page-title">Menu Principal</h3>
+
+        <div class="row g-3 mb-4">
+            <div class="col-md-4"><div class="stat-card stat-blue">
+                <i class="bi bi-folder2-open"></i>
+                <div><div>Mis proyectos</div><div class="num" th:text="${totalProyectos}">0</div></div></div></div>
+            <div class="col-md-4"><div class="stat-card stat-green">
+                <i class="bi bi-hourglass-split"></i>
+                <div><div>Tareas pendientes</div><div class="num" th:text="${tareasPendientes}">0</div></div></div></div>
+            <div class="col-md-4"><div class="stat-card stat-orange">
+                <i class="bi bi-check-circle"></i>
+                <div><div>Tareas completadas</div><div class="num" th:text="${tareasCompletadas}">0</div></div></div></div>
+        </div>
+
+        <div class="row g-3">
+            <!-- PROYECTOS -->
+            <div class="col-lg-7">
+                <div class="card-sf">
+                    <div class="d-flex justify-content-between mb-2">
+                        <h5 class="fw-bold mb-0">Proyectos</h5>
+                        <a th:href="@{/proyectos}" class="fw-semibold text-decoration-none">Ver todos</a>
+                    </div>
+                    <p class="text-muted my-4" th:if="${proyectos.isEmpty()}">Aun no tienes proyectos.</p>
+                    <a th:each="p : ${proyectos}" th:href="@{/proyectos/{id}(id=${p.id})}"
+                       class="proyecto-item item-buscable"
+                       th:with="c=${p.progreso >= 70 ? 'success' : (p.progreso >= 40 ? 'warning' : 'danger')}">
+                        <span class="dot" th:classappend="'dot-' + ${c}"></span>
+                        <div class="info">
+                            <div class="fw-semibold" th:text="${p.nombre}">Proyecto</div>
+                            <small class="text-muted">Lider: <span th:text="${lideres[p.id]}"></span></small>
+                            <div class="progress mt-2" style="height:8px">
+                                <div class="progress-bar" th:classappend="'bg-' + ${c}"
+                                     th:style="'width:' + ${p.progreso} + '%'"></div>
+                            </div>
+                        </div>
+                        <span class="text-muted" th:text="${p.progreso} + '%'">0%</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- TAREAS -->
+            <div class="col-lg-5">
+                <div class="card-sf">
+                    <div class="d-flex justify-content-between mb-2">
+                        <h5 class="fw-bold mb-0">Tareas pendientes</h5>
+                        <a th:href="@{/tareas}" class="fw-semibold text-decoration-none">Ver todas</a>
+                    </div>
+                    <p class="text-muted my-4" th:if="${tareas.isEmpty()}">No tienes tareas pendientes.</p>
+                    <a th:each="t : ${tareas}"
+                       th:href="@{/proyectos/{pid}/tareas/{tid}(pid=${t.proyecto.id},tid=${t.id})}"
+                       class="proyecto-item item-buscable">
+                        <span class="prio-dot" th:classappend="'prio-' + ${t.prioridad}"></span>
+                        <div class="info">
+                            <div class="fw-semibold" th:text="${t.titulo}">Tarea</div>
+                            <small class="text-muted" th:text="${t.proyecto.nombre}"></small>
+                        </div>
+                        <small th:classappend="${t.fechaFin.isBefore(#temporals.createToday())} ? 'text-danger fw-semibold' : 'text-muted'"
+                               th:text="${#temporals.format(t.fechaFin,'dd/MM/yyyy')}"></small>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

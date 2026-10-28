@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(${tarea.titulo})}">
+	
+	<link rel="icon" type="image/png" href="/imagenes/icons.png">
+</head>
+<body>
+<div class="app-shell">
+    <aside th:replace="~{fragments/layout :: sidebar('tareas')}"></aside>
+
+    <main class="app-main">
+        <div th:replace="~{fragments/layout :: mensajes}"></div>
+
+        <!-- CABECERA -->
+        <a th:href="@{/tareas(proyectoId=${proyecto.id})}" class="text-decoration-none">
+            <i class="bi bi-arrow-left"></i> Volver a Tareas</a>
+        <div class="d-flex flex-wrap align-items-center gap-3 my-3">
+            <h3 class="fw-bold mb-0" th:text="${tarea.titulo}">Titulo</h3>
+            <span class="prio-dot" th:classappend="'prio-' + ${tarea.prioridad}"
+                  th:title="'Prioridad ' + ${#strings.toLowerCase(tarea.prioridad.name())}"></span>
+            <a th:href="@{/proyectos/{id}(id=${proyecto.id})}" class="btn btn-outline-sf ms-lg-auto"
+               th:text="${proyecto.nombre}">Proyecto</a>
+            <a th:if="${esLider}" th:href="@{/proyectos/{p}/tareas/{t}/editar(p=${proyecto.id},t=${tarea.id})}"
+               class="btn btn-outline-sf"><i class="bi bi-pencil"></i> Editar</a>
+            <button type="button" class="btn btn-sf" data-bs-toggle="modal" data-bs-target="#modalNota">
+                <i class="bi bi-plus-lg"></i> Nueva Nota</button>
+        </div>
+
+        <!-- DESCRIPCION -->
+        <div class="card-sf mb-4" style="min-height:140px">
+            <h6 class="fw-bold">Descripcion</h6>
+            <p class="mb-0" style="white-space:pre-line" th:text="${tarea.descripcion ?: 'Sin descripcion.'}"></p>
+        </div>
+
+        <div class="row g-3">
+            <!-- DATOS -->
+            <div class="col-lg-4"><div class="card-sf">
+                <div class="info-row"><span class="k">Fecha inicio</span>
+                    <span th:text="${#temporals.format(tarea.fechaInicio,'dd/MM/yyyy')}"></span></div>
+                <div class="info-row"><span class="k">Fecha fin</span>
+                    <span th:text="${#temporals.format(tarea.fechaFin,'dd/MM/yyyy')}"></span></div>
+                <div class="info-row"><span class="k">Estado</span>
+                    <span class="badge-sf" th:classappend="'b-' + ${#strings.toLowerCase(tarea.estado.name())}"
+                          th:text="${#strings.capitalize(#strings.toLowerCase(tarea.estado.name()))}"></span></div>
+
+                <!-- Solo el lider marca como completada -->
+                <form th:if="${esLider and tarea.estado.name() == 'PENDIENTE'}" method="post"
+                      th:action="@{/proyectos/{p}/tareas/{t}/completar(p=${proyecto.id},t=${tarea.id})}"
+                      onsubmit="return confirm('Marcar esta tarea como completada?')">
+                    <button class="btn btn-sf w-100 mt-3"><i class="bi bi-check2-circle"></i> Marcar como completada</button>
+                </form>
+            </div></div>
+
+            <!-- NOTAS -->
+            <div class="col-lg-8"><div class="card-sf">
+                <h6 class="fw-bold">Notas</h6>
+                <p class="text-muted" th:if="${notas.isEmpty()}">Aun no hay notas en esta tarea.</p>
+                <div class="nota" th:each="n : ${notas}">
+                    <div class="d-flex justify-content-between">
+                        <b th:text="${n.usuario.nombre + ' ' + n.usuario.apellido}"></b>
+                        <small class="text-muted" th:text="${#temporals.format(n.fechaCreacion,'dd/MM/yyyy HH:mm')}"></small>
+                    </div>
+                    <div style="white-space:pre-line" th:text="${n.contenido}"></div>
+                </div>
+            </div></div>
+        </div>
+    </main>
+</div>
+
+<!-- MODAL NUEVA NOTA -->
+<div class="modal fade" id="modalNota" tabindex="-1">
+    <div class="modal-dialog"><form class="modal-content" method="post"
+                                    th:action="@{/proyectos/{p}/tareas/{t}/notas(p=${proyecto.id},t=${tarea.id})}">
+        <div class="modal-header"><h5 class="modal-title">Nueva nota de la tarea</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body"><textarea name="contenido" rows="4" class="form-control"
+                                          placeholder="Registra tu avance..." required></textarea></div>
+        <div class="modal-footer"><button class="btn btn-sf">Guardar nota</button></div>
+    </form></div>
+</div>
+
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

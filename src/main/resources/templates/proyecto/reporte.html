@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Reporte - ' + ${proyecto.nombre})}"></head>
+<body style="background:#fff">
+<style>
+    .reporte { max-width: 820px; margin: 0 auto; padding: 24px; }
+    .reporte h2 { color: #0a2f5c; }
+    @media print { .no-print { display: none !important; } .reporte { padding: 0; } }
+</style>
+
+<div class="reporte">
+    <div class="no-print d-flex justify-content-between mb-3">
+        <a th:href="@{/proyectos/{id}(id=${proyecto.id})}" class="btn btn-outline-sf"><i class="bi bi-arrow-left"></i> Volver</a>
+        <button type="button" class="btn btn-sf" onclick="window.print()"><i class="bi bi-printer"></i> Imprimir / Guardar como PDF</button>
+    </div>
+
+    <div class="text-center border-bottom pb-3 mb-4">
+        <h2 class="fw-bold mb-1">Reporte del proyecto</h2>
+        <small class="text-muted">SkyFlow &middot; Emitido el
+            <span th:text="${#temporals.format(fechaEmision,'dd/MM/yyyy')}"></span></small>
+    </div>
+
+    <h4 class="fw-bold" th:text="${proyecto.nombre}">Proyecto</h4>
+    <p class="text-muted" th:text="${proyecto.descripcion ?: 'Sin descripcion.'}"></p>
+
+    <table class="table table-sm">
+        <tr><th style="width:200px">Fecha de inicio</th><td th:text="${#temporals.format(proyecto.fechaInicio,'dd/MM/yyyy')}"></td></tr>
+        <tr><th>Fecha de fin</th><td th:text="${#temporals.format(proyecto.fechaFin,'dd/MM/yyyy')}"></td></tr>
+        <tr><th>Estado actual</th><td th:text="${proyecto.estado.name() == 'COMPLETADO'} ? 'COMPLETADO' : 'PENDIENTE'"></td></tr>
+        <tr><th>Avance</th><td th:text="${progreso} + ' %'"></td></tr>
+        <tr><th>Tareas pendientes</th><td th:text="${pendientes}"></td></tr>
+        <tr><th>Tareas completadas</th><td th:text="${completadas}"></td></tr>
+        <tr><th>Total de tareas</th><td th:text="${tareas.size()}"></td></tr>
+    </table>
+
+    <h5 class="fw-bold mt-4">Líder e integrantes</h5>
+    <ul>
+        <li th:each="m : ${miembros}">
+            <span th:text="${m.usuario.nombre + ' ' + m.usuario.apellido}"></span>
+            <small class="text-muted" th:text="${m.rol.name() == 'LIDER'} ? '(Líder)' : '(Subordinado)'"></small>
+        </li>
+    </ul>
+
+    <h5 class="fw-bold mt-4">Listado de tareas</h5>
+    <p class="text-muted" th:if="${tareas.isEmpty()}">El proyecto no tiene tareas registradas.</p>
+    <table class="table table-bordered table-sm" th:unless="${tareas.isEmpty()}">
+        <thead class="table-light"><tr><th>Tarea</th><th>Prioridad</th><th>Inicio</th><th>Fin</th><th>Estado</th></tr></thead>
+        <tbody>
+        <tr th:each="t : ${tareas}">
+            <td th:text="${t.titulo}"></td>
+            <td th:text="${#strings.capitalize(#strings.toLowerCase(t.prioridad.name()))}"></td>
+            <td th:text="${#temporals.format(t.fechaInicio,'dd/MM/yyyy')}"></td>
+            <td th:text="${#temporals.format(t.fechaFin,'dd/MM/yyyy')}"></td>
+            <td th:text="${t.estado.name()}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

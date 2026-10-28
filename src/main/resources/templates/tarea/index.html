@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Tareas')}">
+	
+	<link rel="icon" type="image/png" href="@{/imagenes/icons.png}">
+</head>
+<body>
+<div class="app-shell">
+    <aside th:replace="~{fragments/layout :: sidebar('tareas')}"></aside>
+
+    <main class="app-main">
+        <div th:replace="~{fragments/layout :: topbar('Buscar tareas...')}"></div>
+        <div th:replace="~{fragments/layout :: mensajes}"></div>
+
+        <h3 class="page-title">Tareas del proyecto</h3>
+
+        <p class="text-muted" th:if="${proyectos.isEmpty()}">Aun no perteneces a ningun proyecto.</p>
+
+        <th:block th:unless="${proyectos.isEmpty()}">
+            <form method="get" th:action="@{/tareas}" class="mb-3" style="max-width:380px">
+                <select name="proyectoId" class="form-select" onchange="this.form.submit()">
+                    <option th:each="p : ${proyectos}" th:value="${p.id}" th:text="${p.nombre}"
+                            th:selected="${p.id == seleccionado.id}"></option>
+                </select>
+            </form>
+
+            <div class="tabs-sf">
+                <button type="button" class="active" data-filtro="TODOS" th:text="'Todas (' + ${tareas.size()} + ')'">Todas</button>
+                <button type="button" data-filtro="PENDIENTE" th:text="'Pendientes (' + ${pendientes} + ')'">Pendientes</button>
+                <button type="button" data-filtro="COMPLETADA" th:text="'Completadas (' + ${completadas} + ')'">Completadas</button>
+            </div>
+
+            <p class="text-muted" th:if="${tareas.isEmpty()}">Este proyecto aun no tiene tareas.</p>
+            <div class="table-responsive" th:unless="${tareas.isEmpty()}">
+                <table class="table tabla-sf table-hover">
+                    <thead><tr><th>Titulo</th><th>Prioridad</th><th>Estado</th><th>Vencimiento</th></tr></thead>
+                    <tbody>
+                    <tr th:each="t : ${tareas}" class="item-buscable" th:attr="data-estado=${t.estado}">
+                        <td><a th:href="@{/proyectos/{p}/tareas/{t}(p=${seleccionado.id},t=${t.id})}"
+                               class="text-decoration-none fw-semibold" th:text="${t.titulo}"></a></td>
+                        <td><span class="badge-sf" th:classappend="'b-' + ${#strings.toLowerCase(t.prioridad.name())}"
+                                  th:text="${#strings.capitalize(#strings.toLowerCase(t.prioridad.name()))}"></span></td>
+                        <td><span class="badge-sf" th:classappend="'b-' + ${#strings.toLowerCase(t.estado.name())}"
+                                  th:text="${#strings.capitalize(#strings.toLowerCase(t.estado.name()))}"></span></td>
+                        <td th:classappend="${t.estado.name() == 'PENDIENTE' and t.fechaFin.isBefore(#temporals.createToday())} ? 'text-danger fw-semibold'"
+                            th:text="${#temporals.format(t.fechaFin,'dd/MM/yyyy')}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </th:block>
+    </main>
+</div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+	name="reporte_proyecto" pageWidth="595" pageHeight="842" columnWidth="535"
+	leftMargin="30" rightMargin="30" topMargin="30" bottomMargin="30"
+	whenNoDataType="AllSectionsNoDetail">
+
+	<style name="base" isDefault="true" fontName="DejaVu Sans" fontSize="10" forecolor="#0B2A5B"/>
+	<style name="label" fontName="DejaVu Sans" fontSize="8" forecolor="#6B7C93"/>
+	<style name="valor" fontName="DejaVu Sans" fontSize="10" forecolor="#0B2A5B"/>
+	<style name="h2" fontName="DejaVu Sans" fontSize="11" isBold="true" forecolor="#0B2A5B"/>
+	<style name="th" mode="Opaque" backcolor="#E8F0FB" fontName="DejaVu Sans" fontSize="9" isBold="true" forecolor="#0B2A5B"/>
+	<style name="estado" mode="Opaque" forecolor="#C98100" backcolor="#FFF0D4" fontName="DejaVu Sans" fontSize="8" isBold="true">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[Boolean.TRUE.equals($F{completada})]]></conditionExpression>
+			<style forecolor="#17855D" backcolor="#DCF3E8"/>
+		</conditionalStyle>
+	</style>
+
+	<parameter name="nombreProyecto" class="java.lang.String"/>
+	<parameter name="idProyecto" class="java.lang.String"/>
+	<parameter name="fechaReporte" class="java.lang.String"/>
+	<parameter name="descripcion" class="java.lang.String"/>
+	<parameter name="fechaInicio" class="java.lang.String"/>
+	<parameter name="fechaFin" class="java.lang.String"/>
+	<parameter name="lider" class="java.lang.String"/>
+	<parameter name="progreso" class="java.lang.Integer"/>
+	<parameter name="barraProgreso" class="java.awt.Image"/>
+
+	<field name="numero" class="java.lang.Integer"/>
+	<field name="titulo" class="java.lang.String"/>
+	<field name="rangoFechas" class="java.lang.String"/>
+	<field name="estado" class="java.lang.String"/>
+	<field name="completada" class="java.lang.Boolean"/>
+
+	<title>
+		<band height="346">
+			<!-- Cabecera -->
+			<staticText>
+				<reportElement x="0" y="0" width="380" height="34" forecolor="#0B2A5B"/>
+				<textElement verticalAlignment="Middle"><font size="22" isBold="true"/></textElement>
+				<text><![CDATA[REPORTE DE PROYECTO]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="38" width="380" height="36"/>
+				<textElement><font size="12" isBold="true"/></textElement>
+				<textFieldExpression><![CDATA["Proyecto: " + $P{nombreProyecto}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="label" x="395" y="6" width="140" height="12"/>
+				<text><![CDATA[Fecha de reporte]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="395" y="18" width="140" height="14"/>
+				<textElement><font size="9" isBold="true"/></textElement>
+				<textFieldExpression><![CDATA[$P{fechaReporte}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="label" x="395" y="40" width="140" height="12"/>
+				<text><![CDATA[ID del proyecto]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="395" y="52" width="140" height="14"/>
+				<textElement><font size="9" isBold="true"/></textElement>
+				<textFieldExpression><![CDATA[$P{idProyecto}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="84" width="535" height="1" forecolor="#B7D3F2"/>
+			</line>
+
+			<!-- Informacion general -->
+			<rectangle radius="8">
+				<reportElement mode="Opaque" x="0" y="96" width="535" height="134" forecolor="#D6E4F5" backcolor="#EEF4FC"/>
+			</rectangle>
+			<staticText>
+				<reportElement style="h2" x="15" y="104" width="300" height="18"/>
+				<text><![CDATA[INFORMACIÓN GENERAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="label" x="15" y="130" width="250" height="12"/>
+				<text><![CDATA[Nombre del proyecto]]></text>
+			</staticText>
+			<textField>
+				<reportElement style="valor" x="15" y="142" width="250" height="26"/>
+				<textElement><font size="9"/></textElement>
+				<textFieldExpression><![CDATA[$P{nombreProyecto}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="label" x="15" y="172" width="250" height="12"/>
+				<text><![CDATA[Descripción]]></text>
+			</staticText>
+			<textField>
+				<reportElement style="valor" x="15" y="184" width="250" height="42"/>
+				<textElement textAlignment="Justified"><font size="8"/></textElement>
+				<textFieldExpression><![CDATA[$P{descripcion}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="label" x="290" y="130" width="230" height="12"/>
+				<text><![CDATA[Fecha de inicio]]></text>
+			</staticText>
+			<textField>
+				<reportElement style="valor" x="290" y="142" width="230" height="16"/>
+				<textFieldExpression><![CDATA[$P{fechaInicio}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="label" x="290" y="164" width="230" height="12"/>
+				<text><![CDATA[Fecha de finalización]]></text>
+			</staticText>
+			<textField>
+				<reportElement style="valor" x="290" y="176" width="230" height="16"/>
+				<textFieldExpression><![CDATA[$P{fechaFin}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="label" x="290" y="198" width="230" height="12"/>
+				<text><![CDATA[Líder del proyecto]]></text>
+			</staticText>
+			<textField>
+				<reportElement style="valor" x="290" y="210" width="230" height="16"/>
+				<textFieldExpression><![CDATA[$P{lider}]]></textFieldExpression>
+			</textField>
+
+			<!-- Progreso -->
+			<rectangle radius="8">
+				<reportElement mode="Opaque" x="0" y="242" width="535" height="70" forecolor="#D6E4F5" backcolor="#F7FAFE"/>
+			</rectangle>
+			<staticText>
+				<reportElement style="h2" x="15" y="252" width="300" height="18"/>
+				<text><![CDATA[PROGRESO DEL PROYECTO]]></text>
+			</staticText>
+			<image scaleImage="FillFrame">
+				<reportElement x="15" y="282" width="400" height="12"/>
+				<imageExpression><![CDATA[$P{barraProgreso}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="430" y="250" width="90" height="28"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"><font size="18" isBold="true"/></textElement>
+				<textFieldExpression><![CDATA[$P{progreso} + "%"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="label" x="430" y="280" width="90" height="14"/>
+				<textElement textAlignment="Right"><font size="9"/></textElement>
+				<text><![CDATA[Completado]]></text>
+			</staticText>
+
+			<!-- Titulo de la tabla -->
+			<staticText>
+				<reportElement style="h2" x="0" y="324" width="300" height="18"/>
+				<text><![CDATA[TAREAS DEL PROYECTO]]></text>
+			</staticText>
+		</band>
+	</title>
+
+	<columnHeader>
+		<band height="24">
+			<staticText>
+				<reportElement style="th" x="0" y="0" width="30" height="24"/>
+				<box><pen lineWidth="0.5" lineColor="#D6E4F5"/></box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[#]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="th" x="30" y="0" width="235" height="24"/>
+				<box leftPadding="8"><pen lineWidth="0.5" lineColor="#D6E4F5"/></box>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Tarea]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="th" x="265" y="0" width="160" height="24"/>
+				<box leftPadding="8"><pen lineWidth="0.5" lineColor="#D6E4F5"/></box>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Fecha]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="th" x="425" y="0" width="110" height="24"/>
+				<box leftPadding="8"><pen lineWidth="0.5" lineColor="#D6E4F5"/></box>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Estado]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+
+	<detail>
+		<band height="24">
+			<textField>
+				<reportElement x="0" y="0" width="30" height="24"/>
+				<box><pen lineWidth="0.5" lineColor="#D6E4F5"/></box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"><font size="9"/></textElement>
+				<textFieldExpression><![CDATA[$F{numero}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="30" y="0" width="235" height="24"/>
+				<box leftPadding="8" rightPadding="4"><pen lineWidth="0.5" lineColor="#D6E4F5"/></box>
+				<textElement verticalAlignment="Middle"><font size="9"/></textElement>
+				<textFieldExpression><![CDATA[$F{titulo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="265" y="0" width="160" height="24"/>
+				<box leftPadding="8"><pen lineWidth="0.5" lineColor="#D6E4F5"/></box>
+				<textElement verticalAlignment="Middle"><font size="9"/></textElement>
+				<textFieldExpression><![CDATA[$F{rangoFechas}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="425" y="0" width="110" height="24"/>
+				<box><pen lineWidth="0.5" lineColor="#D6E4F5"/></box>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<textField>
+				<reportElement style="estado" x="435" y="4" width="88" height="16"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{estado}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+
+	<pageFooter>
+		<band height="20">
+			<line>
+				<reportElement x="0" y="2" width="535" height="1" forecolor="#B7D3F2"/>
+			</line>
+			<staticText>
+				<reportElement style="label" x="0" y="6" width="300" height="12"/>
+				<text><![CDATA[SkyFlow - Reporte generado automáticamente]]></text>
+			</staticText>
+			<textField>
+				<reportElement style="label" x="435" y="6" width="100" height="12"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

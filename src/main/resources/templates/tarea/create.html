@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Crear tarea')}">
+	
+	<link rel="icon" type="image/png" href="/imagenes/icons.png">
+</head>
+<body>
+<div class="app-shell">
+    <aside th:replace="~{fragments/layout :: sidebar('proyectos')}"></aside>
+
+    <main class="app-main">
+        <div th:replace="~{fragments/layout :: mensajes}"></div>
+        <div class="card-sf form-card">
+            <a th:href="@{/proyectos/{id}(id=${proyecto.id})}" class="text-decoration-none">
+                <i class="bi bi-arrow-left"></i> <span th:text="${proyecto.nombre}"></span></a>
+            <h4 class="fw-bold my-3">Crear nueva tarea</h4>
+            <form method="post" th:action="@{/proyectos/{id}/tareas(id=${proyecto.id})}">
+                <div class="mb-3"><input type="text" name="titulo" class="form-control"
+                                         placeholder="Nombre de la Tarea" maxlength="200" required></div>
+                <div class="mb-3"><textarea name="descripcion" rows="3" class="form-control"
+                                            placeholder="Descripcion de la Tarea"></textarea></div>
+                <div class="row g-3 mb-3">
+                    <div class="col"><label class="form-label small text-muted">Fecha inicio</label>
+                        <input type="date" name="fechaInicio" class="form-control" required></div>
+                    <div class="col"><label class="form-label small text-muted">Fecha fin</label>
+                        <input type="date" name="fechaFin" class="form-control" required></div>
+                </div>
+                <label class="form-label fw-semibold">Prioridad</label>
+                <div class="d-flex gap-4 mb-4">
+                    <div class="form-check"><input class="form-check-input" type="radio" name="prioridad" id="pBaja" value="BAJA" checked>
+                        <label class="form-check-label" for="pBaja">Baja</label></div>
+                    <div class="form-check"><input class="form-check-input" type="radio" name="prioridad" id="pMedia" value="MEDIA">
+                        <label class="form-check-label" for="pMedia">Media</label></div>
+                    <div class="form-check"><input class="form-check-input" type="radio" name="prioridad" id="pAlta" value="ALTA">
+                        <label class="form-check-label" for="pAlta">Alta</label></div>
+                </div>
+                <button type="submit" class="btn btn-sf w-100 py-2">Crear nueva tarea</button>
+            </form>
+        </div>
+    </main>
+</div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

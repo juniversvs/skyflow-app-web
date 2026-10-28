@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+	name="constancia_proyecto" pageWidth="595" pageHeight="842" columnWidth="535"
+	leftMargin="30" rightMargin="30" topMargin="30" bottomMargin="30"
+	whenNoDataType="AllSectionsNoDetail">
+
+	<style name="base" isDefault="true" fontName="DejaVu Sans" fontSize="11" forecolor="#3C5A8A"/>
+	<style name="label" fontName="DejaVu Sans" fontSize="10" forecolor="#4A6288"/>
+	<style name="valor" fontName="DejaVu Sans" fontSize="11" forecolor="#0B2A5B"/>
+
+	<parameter name="nombreProyecto" class="java.lang.String"/>
+	<parameter name="fechaInicio" class="java.lang.String"/>
+	<parameter name="fechaFin" class="java.lang.String"/>
+	<parameter name="ciudadFecha" class="java.lang.String"/>
+	<parameter name="lider" class="java.lang.String"/>
+
+	<title>
+		<band height="772">
+			<staticText>
+				<reportElement x="0" y="10" width="535" height="56" forecolor="#0B2A5B"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"><font size="40" isBold="true"/></textElement>
+				<text><![CDATA[CONSTANCIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="70" width="535" height="28" forecolor="#1B4F9C"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"><font size="16" isBold="true"/></textElement>
+				<text><![CDATA[DE FINALIZACIÓN DE PROYECTO]]></text>
+			</staticText>
+
+			<staticText>
+				<reportElement x="0" y="135" width="535" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Por medio de la presente, se deja constancia que el proyecto]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="165" width="535" height="64" forecolor="#0B2A5B"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"><font size="22" isBold="true"/></textElement>
+				<textFieldExpression><![CDATA[$P{nombreProyecto}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="40" y="237" width="455" height="40"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[ha sido finalizado exitosamente, cumpliendo con los objetivos y alcances establecidos.]]></text>
+			</staticText>
+
+			<!-- Cuadro de datos -->
+			<rectangle radius="8">
+				<reportElement mode="Opaque" x="15" y="300" width="505" height="210" forecolor="#CFE0F5" backcolor="#F4F8FD"/>
+			</rectangle>
+
+			<rectangle radius="6"><reportElement mode="Opaque" x="35" y="320" width="30" height="30" forecolor="#3B82F6" backcolor="#3B82F6"/></rectangle>
+			<staticText><reportElement style="label" x="85" y="320" width="170" height="30"/><textElement verticalAlignment="Middle"/><text><![CDATA[Nombre del proyecto:]]></text></staticText>
+			<textField><reportElement style="valor" x="260" y="320" width="250" height="30"/><textElement verticalAlignment="Middle"/><textFieldExpression><![CDATA[$P{nombreProyecto}]]></textFieldExpression></textField>
+			<line><reportElement x="85" y="360" width="425" height="1" forecolor="#DDE8F5"/></line>
+
+			<rectangle radius="6"><reportElement mode="Opaque" x="35" y="370" width="30" height="30" forecolor="#34A66B" backcolor="#34A66B"/></rectangle>
+			<staticText><reportElement style="label" x="85" y="370" width="170" height="30"/><textElement verticalAlignment="Middle"/><text><![CDATA[Fecha de inicio:]]></text></staticText>
+			<textField><reportElement style="valor" x="260" y="370" width="250" height="30"/><textElement verticalAlignment="Middle"/><textFieldExpression><![CDATA[$P{fechaInicio}]]></textFieldExpression></textField>
+			<line><reportElement x="85" y="410" width="425" height="1" forecolor="#DDE8F5"/></line>
+
+			<rectangle radius="6"><reportElement mode="Opaque" x="35" y="420" width="30" height="30" forecolor="#3B82F6" backcolor="#3B82F6"/></rectangle>
+			<staticText><reportElement style="label" x="85" y="420" width="170" height="30"/><textElement verticalAlignment="Middle"/><text><![CDATA[Fecha de finalización:]]></text></staticText>
+			<textField><reportElement style="valor" x="260" y="420" width="250" height="30"/><textElement verticalAlignment="Middle"/><textFieldExpression><![CDATA[$P{fechaFin}]]></textFieldExpression></textField>
+			<line><reportElement x="85" y="460" width="425" height="1" forecolor="#DDE8F5"/></line>
+
+			<rectangle radius="6"><reportElement mode="Opaque" x="35" y="470" width="30" height="30" forecolor="#34A66B" backcolor="#34A66B"/></rectangle>
+			<staticText>
+				<reportElement x="35" y="470" width="30" height="30" forecolor="#FFFFFF"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"><font size="16" isBold="true"/></textElement>
+				<text><![CDATA[✓]]></text>
+			</staticText>
+			<staticText><reportElement style="label" x="85" y="470" width="170" height="30"/><textElement verticalAlignment="Middle"/><text><![CDATA[Estado del proyecto:]]></text></staticText>
+			<staticText>
+				<reportElement x="260" y="470" width="250" height="30" forecolor="#1F9D5A"/>
+				<textElement verticalAlignment="Middle"><font size="12" isBold="true"/></textElement>
+				<text><![CDATA[Finalizado]]></text>
+			</staticText>
+
+			<staticText>
+				<reportElement x="40" y="535" width="455" height="60"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Este proyecto fue desarrollado con dedicación, compromiso y trabajo en equipo, demostrando la capacidad de la organización para llevar a cabo soluciones tecnológicas de calidad.]]></text>
+			</staticText>
+
+			<textField>
+				<reportElement x="15" y="640" width="330" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{ciudadFecha}]]></textFieldExpression>
+			</textField>
+
+			<!-- Sello -->
+			<ellipse>
+				<reportElement mode="Opaque" x="410" y="610" width="90" height="90" forecolor="#1FA67A" backcolor="#1FA67A"/>
+			</ellipse>
+			<ellipse>
+				<reportElement mode="Opaque" x="418" y="618" width="74" height="74" forecolor="#1FA67A" backcolor="#FFFFFF"/>
+				<graphicElement><pen lineWidth="3" lineColor="#1FA67A"/></graphicElement>
+			</ellipse>
+			<staticText>
+				<reportElement x="418" y="618" width="74" height="74" forecolor="#1FA67A"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"><font size="40" isBold="true"/></textElement>
+				<text><![CDATA[✓]]></text>
+			</staticText>
+
+			<!-- Firma -->
+			<line><reportElement x="15" y="715" width="230" height="1" forecolor="#0B2A5B"/></line>
+			<textField>
+				<reportElement x="15" y="719" width="230" height="16" forecolor="#0B2A5B"/>
+				<textElement textAlignment="Center"><font size="11" isBold="true"/></textElement>
+				<textFieldExpression><![CDATA[$P{lider}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="15" y="736" width="230" height="14"/>
+				<textElement textAlignment="Center"><font size="9"/></textElement>
+				<text><![CDATA[Líder del proyecto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="15" y="750" width="230" height="14"/>
+				<textElement textAlignment="Center"><font size="9"/></textElement>
+				<text><![CDATA[SkyFlow]]></text>
+			</staticText>
+		</band>
+	</title>
+</jasperReport>

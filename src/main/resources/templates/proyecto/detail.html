@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(${proyecto.nombre})}">
+	
+	<link rel="icon" type="image/png" href="/imagenes/icons.png">
+</head>
+<body>
+<div class="app-shell">
+    <aside th:replace="~{fragments/layout :: sidebar('proyectos')}"></aside>
+
+    <main class="app-main">
+        <div th:replace="~{fragments/layout :: mensajes}"></div>
+
+        <!-- CABECERA -->
+        <div class="card-sf mb-4" th:with="c=${progreso >= 70 ? 'success' : (progreso >= 40 ? 'warning' : 'danger')}">
+            <a th:href="@{/proyectos}" class="text-decoration-none"><i class="bi bi-arrow-left"></i> Volver a proyectos</a>
+            <div class="d-flex flex-wrap gap-3 align-items-start mt-2">
+                <span class="dot" style="width:60px;height:60px" th:classappend="'dot-' + ${c}"></span>
+                <div class="flex-grow-1" style="min-width:260px">
+                    <h3 class="fw-bold mb-1">
+                        <span th:text="${proyecto.nombre}">Proyecto</span>
+                        <span class="badge-sf ms-2 fs-6"
+                              th:classappend="${proyecto.estado.name() == 'COMPLETADO'} ? 'b-completada' : 'b-pendiente'"
+                              th:text="${proyecto.estado.name() == 'COMPLETADO'} ? 'Completado' : 'Pendiente'"></span>
+                    </h3>
+                    <div class="text-muted mb-2"><i class="bi bi-calendar-event"></i>
+                        <span th:text="${#temporals.format(proyecto.fechaInicio,'dd/MM/yyyy')}"></span> -
+                        <span th:text="${#temporals.format(proyecto.fechaFin,'dd/MM/yyyy')}"></span></div>
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="progress flex-grow-1" style="height:10px"><div class="progress-bar"
+                             th:classappend="'bg-' + ${c}" th:style="'width:' + ${progreso} + '%'"></div></div>
+                        <span class="text-muted" th:text="${progreso} + '%'"></span>
+                    </div>
+                </div>
+                <div class="d-flex flex-column gap-2">
+                    <a th:if="${esLider}" th:href="@{/proyectos/{id}/tareas/nueva(id=${proyecto.id})}"
+                       class="btn btn-sf"><i class="bi bi-plus-lg"></i> Nueva tarea</a>
+                    <button th:if="${esLider}" type="button" class="btn btn-sf" data-bs-toggle="modal"
+                            data-bs-target="#modalMiembro"><i class="bi bi-plus-lg"></i> Nuevo Miembro</button>
+                    <button type="button" class="btn btn-sf" data-bs-toggle="modal"
+                            data-bs-target="#modalNota"><i class="bi bi-plus-lg"></i> Nueva Nota</button>
+                    <a th:href="@{/proyectos/{id}/reporte(id=${proyecto.id})}" target="_blank"
+                       class="btn btn-outline-sf"><i class="bi bi-printer"></i> Imprimir reporte</a>
+                    <!-- Constancia: solo lider; habilitada unicamente con el proyecto COMPLETADO -->
+                    <a th:if="${puedeConstancia}" th:href="@{/proyectos/{id}/constancia(id=${proyecto.id})}"
+                       target="_blank" class="btn btn-sf"><i class="bi bi-patch-check"></i> Generar constancia de finalización</a>
+                    <button th:if="${esLider and !puedeConstancia}" type="button" class="btn btn-sf" disabled
+                            title="Disponible cuando todas las tareas esten completadas">
+                        <i class="bi bi-patch-check"></i> Generar constancia de finalización</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABS -->
+        <div class="tabs-sf">
+            <button type="button" data-panel="panel-resumen">Resumen</button>
+            <button type="button" data-panel="panel-tareas" th:text="'Tareas (' + ${tareas.size()} + ')'">Tareas</button>
+            <button type="button" data-panel="panel-miembros" th:text="'Miembros (' + ${miembros.size()} + ')'">Miembros</button>
+            <button type="button" data-panel="panel-notas" th:text="'Notas (' + ${notas.size()} + ')'">Notas</button>
+        </div>
+
+        <!-- RESUMEN -->
+        <div id="panel-resumen" class="panel-tab">
+            <div class="row g-3">
+                <div class="col-lg-7"><div class="card-sf h-100">
+                    <h5 class="fw-bold mb-3">Informacion del proyecto</h5>
+                    <div class="info-row"><span class="k">Lider</span>
+                        <span th:if="${lider != null}" th:text="${lider.usuario.nombre + ' ' + lider.usuario.apellido}"></span></div>
+                    <div class="info-row"><span class="k">Fecha inicio</span>
+                        <span th:text="${#temporals.format(proyecto.fechaInicio,'dd/MM/yyyy')}"></span></div>
+                    <div class="info-row"><span class="k">Fecha fin</span>
+                        <span th:text="${#temporals.format(proyecto.fechaFin,'dd/MM/yyyy')}"></span></div>
+                    <h6 class="fw-bold mt-3">Descripcion</h6>
+                    <p class="text-muted" th:text="${proyecto.descripcion ?: 'Sin descripcion.'}"></p>
+                </div></div>
+                <div class="col-lg-5">
+                    <div class="card-sf mb-3">
+                        <h5 class="fw-bold mb-3">Miembros</h5>
+                        <div th:each="m : ${miembros}" class="d-flex align-items-center gap-2 mb-2">
+                            <span class="avatar" th:text="${#strings.substring(m.usuario.nombre,0,1)}">A</span>
+                            <span th:text="${m.usuario.nombre + ' ' + m.usuario.apellido}"></span>
+                            <small class="text-muted" th:text="${m.rol.name() == 'LIDER'} ? '(Lider)' : '(Subordinado)'"></small>
+                        </div>
+                    </div>
+                    <div class="card-sf">
+                        <h5 class="fw-bold mb-3">Tareas por estado</h5>
+                        <div class="d-flex align-items-center gap-4">
+                            <div class="donut"
+                                 th:style="${tareas.isEmpty()} ? 'background:#e6edf7' : 'background:conic-gradient(#1a9a6c 0 ' + ${porcentajeCompletadas} + '%, #f2a52b 0)'">
+                                <div class="centro"><b class="fs-4" th:text="${tareas.size()}">0</b><small class="text-muted">total</small></div>
+                            </div>
+                            <div>
+                                <div><span class="badge-sf b-pendiente">Pendientes</span> <b th:text="${pendientes}"></b></div>
+                                <div class="mt-2"><span class="badge-sf b-completada">Completadas</span> <b th:text="${completadas}"></b></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAREAS -->
+        <div id="panel-tareas" class="panel-tab d-none">
+            <p class="text-muted" th:if="${tareas.isEmpty()}">Este proyecto aun no tiene tareas.</p>
+            <div class="table-responsive" th:unless="${tareas.isEmpty()}">
+                <table class="table tabla-sf">
+                    <thead><tr><th>Titulo</th><th>Prioridad</th><th>Estado</th><th>Vencimiento</th></tr></thead>
+                    <tbody>
+                    <tr th:each="t : ${tareas}">
+                        <td><a th:href="@{/proyectos/{p}/tareas/{t}(p=${proyecto.id},t=${t.id})}"
+                               class="text-decoration-none fw-semibold" th:text="${t.titulo}"></a></td>
+                        <td><span class="badge-sf" th:classappend="'b-' + ${#strings.toLowerCase(t.prioridad.name())}"
+                                  th:text="${#strings.capitalize(#strings.toLowerCase(t.prioridad.name()))}"></span></td>
+                        <td><span class="badge-sf" th:classappend="'b-' + ${#strings.toLowerCase(t.estado.name())}"
+                                  th:text="${#strings.capitalize(#strings.toLowerCase(t.estado.name()))}"></span></td>
+                        <td th:text="${#temporals.format(t.fechaFin,'dd/MM/yyyy')}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- MIEMBROS -->
+        <div id="panel-miembros" class="panel-tab d-none">
+            <div class="card-sf">
+                <div th:each="m : ${miembros}" class="d-flex align-items-center gap-3 py-2 border-bottom">
+                    <span class="avatar" th:text="${#strings.substring(m.usuario.nombre,0,1)}">A</span>
+                    <div class="flex-grow-1">
+                        <div class="fw-semibold" th:text="${m.usuario.nombre + ' ' + m.usuario.apellido}"></div>
+                        <small class="text-muted" th:text="${m.usuario.correo}"></small>
+                    </div>
+                    <span class="badge-sf" th:classappend="${m.rol.name() == 'LIDER'} ? 'b-completada' : 'b-media'"
+                          th:text="${m.rol.name() == 'LIDER'} ? 'Lider' : 'Subordinado'"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- NOTAS -->
+        <div id="panel-notas" class="panel-tab d-none">
+            <div class="card-sf">
+                <p class="text-muted" th:if="${notas.isEmpty()}">Aun no hay notas.</p>
+                <div class="nota" th:each="n : ${notas}">
+                    <div class="d-flex justify-content-between">
+                        <b th:text="${n.usuario.nombre + ' ' + n.usuario.apellido}"></b>
+                        <small class="text-muted" th:text="${#temporals.format(n.fechaCreacion,'dd/MM/yyyy HH:mm')}"></small>
+                    </div>
+                    <div style="white-space:pre-line" th:text="${n.contenido}"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- MODAL NUEVO MIEMBRO (solo lider) -->
+<div class="modal fade" id="modalMiembro" tabindex="-1" th:if="${esLider}">
+    <div class="modal-dialog"><form class="modal-content" method="post" th:action="@{/proyectos/{id}/miembros(id=${proyecto.id})}">
+        <div class="modal-header"><h5 class="modal-title">Agregar miembro</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+            <label class="form-label">Correo del usuario registrado</label>
+            <input type="email" name="correo" class="form-control" placeholder="correo@ejemplo.com" required>
+            <small class="text-muted">Entrara al proyecto como subordinado.</small>
+        </div>
+        <div class="modal-footer"><button class="btn btn-sf">Agregar</button></div>
+    </form></div>
+</div>
+
+<!-- MODAL NUEVA NOTA -->
+<div class="modal fade" id="modalNota" tabindex="-1">
+    <div class="modal-dialog"><form class="modal-content" method="post" th:action="@{/proyectos/{id}/notas(id=${proyecto.id})}">
+        <div class="modal-header"><h5 class="modal-title">Nueva nota del proyecto</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body"><textarea name="contenido" rows="4" class="form-control" placeholder="Escribe la nota..." required></textarea></div>
+        <div class="modal-footer"><button class="btn btn-sf">Guardar nota</button></div>
+    </form></div>
+</div>
+
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

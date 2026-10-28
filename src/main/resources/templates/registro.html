@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Crear cuenta')}">
+	
+	<link rel="icon" type="image/png" href="/imagenes/icons.png">
+</head>
+<body>
+<div class="auth-wrap">
+    <div class="auth-card">
+        <h3 class="fw-bold">Crear cuenta</h3>
+        <p class="text-muted">Unete a SkyFlow y comienza a gestionar tus proyectos</p>
+
+        <div th:replace="~{fragments/layout :: mensajes}"></div>
+
+        <form method="post" th:action="@{/registro}">
+            <div class="row g-2 mb-3">
+                <div class="col"><input type="text" name="nombre" class="form-control" placeholder="Nombre"
+                                        th:value="${nombre}" maxlength="100" required></div>
+                <div class="col"><input type="text" name="apellido" class="form-control" placeholder="Apellido"
+                                        th:value="${apellido}" maxlength="100" required></div>
+            </div>
+            <div class="mb-3">
+                <input type="email" name="correo" class="form-control" placeholder="Correo electronico"
+                       th:value="${correo}" maxlength="150" required>
+            </div>
+            <div class="mb-4 input-group">
+                <input type="password" name="password" id="password" class="form-control"
+                       placeholder="Contrasena" minlength="4" required>
+                <button type="button" class="btn btn-outline-secondary"
+                        onclick="const p=document.getElementById('password');p.type=p.type==='password'?'text':'password'">
+                    <i class="bi bi-eye"></i></button>
+            </div>
+            <button type="submit" class="btn btn-sf w-100 py-2">Registrarse</button>
+            <p class="text-center text-muted mt-3 mb-0">Ya tienes una cuenta?
+                <a th:href="@{/login}" class="fw-semibold">Inicia sesion</a></p>
+        </form>
+    </div>
+</div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

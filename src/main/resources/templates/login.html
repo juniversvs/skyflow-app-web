@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Iniciar sesión')}">
+    <link rel="icon" type="image/png" href="@{/imagenes/icons.png}">
+</head>
+<body>
+<div class="auth-wrap">
+    <div class="auth-card">
+        <h3 class="fw-bold">Iniciar sesion</h3>
+        <p class="text-muted">Bienvenido de nuevo, ingresa a tu cuenta</p>
+
+        <div th:replace="~{fragments/layout :: mensajes}"></div>
+
+        <form method="post" th:action="@{/login}">
+            <div class="mb-3">
+                <input type="email" name="correo" class="form-control" placeholder="Correo electronico"
+                       th:value="${correo}" required>
+            </div>
+            <div class="mb-4 input-group">
+                <input type="password" name="password" id="password" class="form-control"
+                       placeholder="Contrasena" required>
+                <button type="button" class="btn btn-outline-secondary"
+                        onclick="const p=document.getElementById('password');p.type=p.type==='password'?'text':'password'">
+                    <i class="bi bi-eye"></i></button>
+            </div>
+            <button type="submit" class="btn btn-sf w-100 py-2">Iniciar sesion</button>
+            <div class="text-center text-muted my-3">o</div>
+            <a th:href="@{/registro}" class="btn btn-outline-sf w-100 py-2">Crear una cuenta</a>
+        </form>
+    </div>
+</div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

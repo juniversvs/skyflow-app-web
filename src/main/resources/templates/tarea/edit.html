@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Editar tarea')}">
+	
+	<link rel="icon" type="image/png" href="@{/imagenes/icons.png}">
+</head>
+<body>
+<div class="app-shell">
+    <aside th:replace="~{fragments/layout :: sidebar('tareas')}"></aside>
+
+    <main class="app-main">
+        <div th:replace="~{fragments/layout :: mensajes}"></div>
+        <div class="card-sf form-card">
+            <a th:href="@{/proyectos/{p}/tareas/{t}(p=${proyecto.id},t=${tarea.id})}" class="text-decoration-none">
+                <i class="bi bi-arrow-left"></i> Volver a la tarea</a>
+            <h4 class="fw-bold my-3">Editar tarea</h4>
+            <form method="post" th:action="@{/proyectos/{p}/tareas/{t}/editar(p=${proyecto.id},t=${tarea.id})}">
+                <div class="mb-3"><input type="text" name="titulo" class="form-control" maxlength="200"
+                                         th:value="${tarea.titulo}" required></div>
+                <div class="mb-3"><textarea name="descripcion" rows="3" class="form-control"
+                                            th:text="${tarea.descripcion}"></textarea></div>
+                <div class="row g-3 mb-3">
+                    <div class="col"><label class="form-label small text-muted">Fecha inicio</label>
+                        <input type="date" name="fechaInicio" class="form-control" th:value="${tarea.fechaInicio}" required></div>
+                    <div class="col"><label class="form-label small text-muted">Fecha fin</label>
+                        <input type="date" name="fechaFin" class="form-control" th:value="${tarea.fechaFin}" required></div>
+                </div>
+                <label class="form-label fw-semibold">Prioridad</label>
+                <div class="d-flex gap-4 mb-4">
+                    <div class="form-check"><input class="form-check-input" type="radio" name="prioridad" id="pBaja" value="BAJA"
+                                                   th:checked="${tarea.prioridad.name() == 'BAJA'}">
+                        <label class="form-check-label" for="pBaja">Baja</label></div>
+                    <div class="form-check"><input class="form-check-input" type="radio" name="prioridad" id="pMedia" value="MEDIA"
+                                                   th:checked="${tarea.prioridad.name() == 'MEDIA'}">
+                        <label class="form-check-label" for="pMedia">Media</label></div>
+                    <div class="form-check"><input class="form-check-input" type="radio" name="prioridad" id="pAlta" value="ALTA"
+                                                   th:checked="${tarea.prioridad.name() == 'ALTA'}">
+                        <label class="form-check-label" for="pAlta">Alta</label></div>
+                </div>
+                <button type="submit" class="btn btn-sf w-100 py-2">Guardar cambios</button>
+            </form>
+        </div>
+    </main>
+</div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

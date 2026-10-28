@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Mis proyectos')}">
+	
+	<link rel="icon" type="image/png" href="/imagenes/icons.png">
+</head>
+<body>
+<div class="app-shell">
+    <aside th:replace="~{fragments/layout :: sidebar('proyectos')}"></aside>
+
+    <main class="app-main">
+        <div class="topbar">
+            <div class="buscador">
+                <i class="bi bi-search"></i>
+                <input type="text" id="buscador" class="form-control" placeholder="Buscar proyectos...">
+            </div>
+            <div class="ms-auto d-flex gap-2">
+                <a th:href="@{/proyectos/nuevo}" class="btn btn-sf"><i class="bi bi-plus-lg"></i> Nuevo proyecto</a>
+                <a th:href="@{/logout}" class="btn btn-outline-sf"><i class="bi bi-box-arrow-right"></i> Cerrar sesion</a>
+            </div>
+        </div>
+        <div th:replace="~{fragments/layout :: mensajes}"></div>
+
+        <h3 class="page-title">Mis proyectos</h3>
+
+        <div class="tabs-sf">
+            <button type="button" class="active" data-filtro="TODOS" th:text="'Todos (' + ${proyectos.size()} + ')'">Todos</button>
+            <button type="button" data-filtro="PENDIENTE" th:text="'Activos (' + ${activos} + ')'">Activos</button>
+            <button type="button" data-filtro="COMPLETADO" th:text="'Finalizados (' + ${finalizados} + ')'">Finalizados</button>
+        </div>
+
+        <p class="text-muted" th:if="${proyectos.isEmpty()}">Aun no tienes proyectos. Crea el primero.</p>
+
+        <a th:each="p : ${proyectos}" th:href="@{/proyectos/{id}(id=${p.id})}"
+           class="card-sf proyecto-item item-buscable mb-3" th:attr="data-estado=${p.estado}"
+           th:with="c=${p.progreso >= 70 ? 'success' : (p.progreso >= 40 ? 'warning' : 'danger')}">
+            <span class="dot" th:classappend="'dot-' + ${c}"></span>
+            <div class="info">
+                <div class="fw-semibold" th:text="${p.nombre}">Proyecto</div>
+                <small class="text-muted">
+                    <i class="bi bi-calendar-event"></i>
+                    <span th:text="${#temporals.format(p.fechaInicio,'dd/MM/yyyy')}"></span> -
+                    <span th:text="${#temporals.format(p.fechaFin,'dd/MM/yyyy')}"></span>
+                    &middot; Lider: <span th:text="${lideres[p.id]}"></span>
+                </small>
+            </div>
+            <div class="barra">
+                <div class="progress"><div class="progress-bar" th:classappend="'bg-' + ${c}"
+                                           th:style="'width:' + ${p.progreso} + '%'"></div></div>
+                <span class="text-muted" th:text="${p.progreso} + '%'">0%</span>
+            </div>
+            <i class="bi bi-chevron-right text-muted"></i>
+        </a>
+    </main>
+</div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
